@@ -102,9 +102,11 @@ class TestProject
     }
 
     /**
+     * Get Location By IP
      *
+     * @return array|null
      */
-    protected function getAddressByIp():array {
+    protected function getAddressByIp():?array {
         /**
          * Get Visitor IP
          */
@@ -131,7 +133,7 @@ class TestProject
         } else {
             // Get IP Location (lat, long)
             $currentLocation = $this->getAddressByIp();
-            if(!isset($currentLocation['lat']) || !isset($currentLocation['lon'])) return 'Err';
+            if(!isset($currentLocation['lat']) || !isset($currentLocation['lon'])) return [];
         }
 
         // Stack
@@ -164,17 +166,24 @@ class TestProject
      * Haversine Formula
      */
     protected function haversineFormulaTwoPoints(array $point1, array $point2) {
+
+        // Km Radius
         $radius = 6371;
+
         $point1Lat = $point1[0];
         $point2Lat = $point2[0];
+
         $deltaLat = deg2rad($point2Lat - $point1Lat);
-        $point1Long =$point1[1];
-        $point2Long =$point2[1];
+
+        $point1Long = $point1[1];
+        $point2Long = $point2[1];
+
         $deltaLong = deg2rad($point2Long - $point1Long);
+
         $a = sin($deltaLat/2) * sin($deltaLat/2) + cos(deg2rad($point1Lat)) * cos(deg2rad($point2Lat)) * sin($deltaLong/2) * sin($deltaLong/2);
         $c = 2 * atan2(sqrt($a), sqrt(1-$a));
 
         $distance = $radius * $c;
-        return $distance;    // in km
+        return $distance; // in KM
     }
 }
