@@ -3,6 +3,17 @@ class TestProject
 {
 
     /**
+     * Search by custom IP
+     */
+    protected string $customIP;
+
+    function __construct(string $customIP='') {
+
+        // Search by custom IP
+        $this->customIP = $customIP;
+    }
+
+    /**
      * Curl external API by $url
      *
      * @return string|null
@@ -77,6 +88,8 @@ class TestProject
      */
     public function getIP() {
 
+        if(!empty($this->customIP)) return $this->customIP;
+
         // if(isset($_SERVER['HTTP_CLIENT_IP'])) return $_SERVER['HTTP_CLIENT_IP'];
         // if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])) return $_SERVER['HTTP_X_FORWARDED_FOR'];
         // if(isset($_SERVER['HTTP_X_FORWARDED'])) return $_SERVER['HTTP_X_FORWARDED'];
@@ -100,7 +113,7 @@ class TestProject
         /**
          * Api call
          */
-        return $this->curlIpApi($ip);
+        return !empty($this->customIP) ? $this->curlIpApi($this->customIP) : $this->curlIpApi($ip);
     }
 
     /**
@@ -108,11 +121,18 @@ class TestProject
      *
      * @return array
      */
-    public function getDistanceBetweenPoints(string $targetLocation = ''):array {
+    public function getDistanceBetweenPoints(string $lat='', string $lon=''):array {
 
-        // Get IP Location (lat, long)
-        $currentLocation = $this->getAddressByIp();
-        if(!isset($currentLocation['lat']) || !isset($currentLocation['lon'])) return 'Err';
+        // If custom lat, lon
+        if(!empty($lat) && !empty($lon)) {
+            $currentLocation = [];
+            $currentLocation['lat'] = $lat;
+            $currentLocation['lon'] = $lon;
+        } else {
+            // Get IP Location (lat, long)
+            $currentLocation = $this->getAddressByIp();
+            if(!isset($currentLocation['lat']) || !isset($currentLocation['lon'])) return 'Err';
+        }
 
         // Stack
         $stack = [];
@@ -128,7 +148,9 @@ class TestProject
             $stack[] = array(
                 'distance' => $distance,
                 'name' => $parkingSpot['name'],
-                'numOfFreePlaces' => $parkingSpot['numOfFreePlaces']
+                'numOfFreePlaces' => $parkingSpot['numOfFreePlaces'],
+                'lat' => $parkingSpot['lat'],
+                'lng' => $parkingSpot['lng']
             );
         }
 

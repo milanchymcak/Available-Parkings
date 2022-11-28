@@ -1,3 +1,6 @@
+// Global
+let typingTimer;
+
 /**
  * Search
  */
@@ -7,11 +10,23 @@ window.addEventListener('load', () => {
         input.addEventListener('keyup', (e) => {
 
             // Hide/show parking spots based on search
-            searchParkingSpots(e.target.value);
+            // Add fake latency to not fire up for every key press
+            clearTimeout(typingTimer);
+            setTimeout(searchParkingSpots(e.target.value), 1500);
 
         })
     }
 })
+
+/**
+ * Show IP Change Form
+ */
+const ipChangeShow = () => {
+    const ipForm = document.querySelector(".visitorIP form");
+    if(ipForm !== undefined && ipForm !== null) {
+        ipForm.classList.toggle("hide");
+    }
+}
 
 /**
  * Search Parking Spots By Keyword
