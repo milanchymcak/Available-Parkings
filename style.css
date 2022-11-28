@@ -78,6 +78,7 @@ header {
 .visitorIP cite {
     font-size: 12px;
     color: blue;
+    cursor: pointer;
 }
 .visitorIP form {
     margin: 15px 0px;
