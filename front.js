@@ -12,7 +12,7 @@ window.addEventListener('load', () => {
             // Hide/show parking spots based on search
             // Add fake latency to not fire up for every key press
             clearTimeout(typingTimer);
-            setTimeout(searchParkingSpots(e.target.value), 1500);
+            typingTimer = setTimeout(searchParkingSpots(e.target.value), 1500);
 
         })
     }
